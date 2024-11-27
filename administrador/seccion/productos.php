@@ -1,24 +1,66 @@
 <?php include('../template/header.php'); ?>
 
 <?php
+$txtID = (isset($_POST['txtID'])) ?$_POST['txtID'] :'';
 
-$txtID = (isset($_POST['txtID']))?$_POST['txtID']:'';
+$txtNombre = (isset($_POST['txtNombre'])) ?$_POST['txtNombre'] :'';
 
-$txtNombre = (isset($_POST['txtNombre']))?$_POST['txtNombre']:'';
+$txtImagen = (isset($_FILES['txtImagen']['name'])) ?$_FILES['txtImagen']['name'] :'';
 
-$txtImagen = (isset($_FILES['txtImagen']['name']))?$_FILES['txtImagen']['name']:'';
+$accion = (isset($_POST['accion'])) ?$_POST['accion'] :'';
 
-$accion = (isset($_POST['accion']))?$_POST['accion']:'';
+echo $txtID."<br>";
+echo $txtNombre."<br>";
+echo $txtImagen."<br>";
+echo $accion."<br>";  
 
+
+//Conexion a la base de datos
+$host = "localhost";
+$user = "root"; 
+$password = "root";
+$database = "sitio";
+
+// Probar con un try-catch si realiza la conexion
+try {
+  $conexion = new PDO("mysql:host=$host;dbname=$database;", $user, $password);
+  $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  echo "Conexion exitosa a BD";
+} catch (PDOException $e) {
+  echo "Conexion fallida: " . $e->getMessage();
+}
+$conexion = null;
+
+
+switch($accion){
+  case "Agregar":
+    $sentenciaSQL= $conexion->prepare("INSERT INTO libros (id, nombre, imagen) VALUES (NULL, 'Libro de PHP', '2.jpg');");
+    $sentenciaSQL->bindParam(':id', $txtID);
+    $sentenciaSQL->bindParam(':nombre', $txtNombre);
+    $sentenciaSQL->bindParam(':imagen', $txtImagen);
+    $sentenciaSQL->execute();
+    break;
+  case "Modificar":
+    $sentenciaSQL= $conexion->prepare("UPDATE libros SET nombre=:nombre, imagen=:imagen WHERE id=:id;");
+    $sentenciaSQL->bindParam(':id', $txtID);
+    $sentenciaSQL->bindParam(':nombre', $txtNombre);
+    $sentenciaSQL->bindParam(':imagen', $txtImagen);
+    $sentenciaSQL->execute();
+    break;
+  case "Eliminar":
+    $sentenciaSQL= $conexion->prepare("DELETE FROM libros WHERE id=:id;");
+    $sentenciaSQL->bindParam(':id', $txtID);
+    $sentenciaSQL->execute();
+    break;
+}
 
 ?>
 
 <div class="col-md-5">
   <!-- card -->
   <div class="card">
-
-  <div class="card-header">
-      Dato del Libro
+    <div class="card-header">
+      Datos del Libro
     </div>
 
     <div class="card-body">
@@ -40,11 +82,11 @@ $accion = (isset($_POST['accion']))?$_POST['accion']:'';
           </div>
       
           <div class="btn-group" role="group" aria-label="">
-            <button type="button" name="accion" value="Agregar" class="btn btn-success">Agregar</button>
-            <button type="button" name="accion" value="Editar" class="btn btn-warning">Editar</button>
-            <button type="button" name="accion" value="Cancelar" class="btn btn-info">Cancelar</button>
+            <button type="submit" name="accion" value="Agregar" class="btn btn-success">Agregar</button>
+            <button type="submit" name="accion" value="Editar" class="btn btn-warning">Editar</button>
+            <button type="submit" name="accion" value="Cancelar" class="btn btn-info">Cancelar</button>
           </div>
-      
+
         </form>
 
     </div>
@@ -52,8 +94,7 @@ $accion = (isset($_POST['accion']))?$_POST['accion']:'';
 </div>
 
 <div class="col-md-7">
-  <!-- tabla -->
- 
+  <!-- tabla --> 
   <table class="table table-bordered">
     <thead>
       <tr>
