@@ -29,28 +29,28 @@ try {
 } catch (PDOException $e) {
   echo "Conexion fallida: " . $e->getMessage();
 }
-$conexion = null;
+
 
 
 switch($accion){
   case "Agregar":
-    $sentenciaSQL= $conexion->prepare("INSERT INTO libros (id, nombre, imagen) VALUES (NULL, 'Libro de PHP', '2.jpg');");
-    $sentenciaSQL->bindParam(':id', $txtID);
-    $sentenciaSQL->bindParam(':nombre', $txtNombre);
-    $sentenciaSQL->bindParam(':imagen', $txtImagen);
+    $sentenciaSQL= $conexion->prepare("INSERT INTO `libros` (`id`, `nombre`, `imagen`) VALUES (NULL, 'Libro de PHP', '2.jpg');");
+    // $sentenciaSQL->bindParam(':id', $txtID);
+    // $sentenciaSQL->bindParam(':nombre', $txtNombre);
+    // $sentenciaSQL->bindParam(':imagen', $txtImagen);
     $sentenciaSQL->execute();
     break;
   case "Modificar":
-    $sentenciaSQL= $conexion->prepare("UPDATE libros SET nombre=:nombre, imagen=:imagen WHERE id=:id;");
-    $sentenciaSQL->bindParam(':id', $txtID);
-    $sentenciaSQL->bindParam(':nombre', $txtNombre);
-    $sentenciaSQL->bindParam(':imagen', $txtImagen);
-    $sentenciaSQL->execute();
+    // $sentenciaSQL= $conexion->prepare("UPDATE libros SET nombre=:nombre, imagen=:imagen WHERE id=:id;");
+    // $sentenciaSQL->bindParam(':id', $txtID);
+    // $sentenciaSQL->bindParam(':nombre', $txtNombre);
+    // $sentenciaSQL->bindParam(':imagen', $txtImagen);
+    // $sentenciaSQL->execute();
     break;
   case "Eliminar":
-    $sentenciaSQL= $conexion->prepare("DELETE FROM libros WHERE id=:id;");
-    $sentenciaSQL->bindParam(':id', $txtID);
-    $sentenciaSQL->execute();
+    // $sentenciaSQL= $conexion->prepare("DELETE FROM libros WHERE id=:id;");
+    // $sentenciaSQL->bindParam(':id', $txtID);
+    // $sentenciaSQL->execute();
     break;
 }
 
