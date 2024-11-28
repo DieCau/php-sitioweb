@@ -17,12 +17,17 @@ switch($accion){
     $sentenciaSQL= $conexion->prepare("INSERT INTO libros (nombre, imagen) VALUES (:nombre, :imagen);");
     // Parametro ':nombre' tendra el valor de $txtNombre
     $sentenciaSQL->bindParam(':nombre', $txtNombre);
-
+    
+    // Coloco $fecha para que el nombre de la imagen sea unico
     $fecha = new DateTime();
+
+    // Si hay una imagen tendra concatenado la fecha + el nombre de la imagen asignada en $nombreArchivo y si no tendra 'imagen.jpg'
     $nombreArchivo = ($txtImagen != '') ? $fecha->getTimestamp()."_".$_FILES["txtImagen"]["name"] : "imagen.jpg";
 
+    // $nombreArchivo se asigna con un tmp_name a $tmpImagen
     $tmpImagen = $_FILES["txtImagen"]["tmp_name"];
 
+    // Si $tmpImagen no esta vacio muevo el archivo $nombreArchivo a la carpeta img
     if($tmpImagen != '') {
       move_uploaded_file($tmpImagen, "../../img/".$nombreArchivo);
     }
@@ -48,7 +53,7 @@ switch($accion){
     break;
   
     case 'Cancelar':
-    // header('Location: productos.php');
+      header('Location: productos.php');
     break;
   
     
@@ -65,6 +70,22 @@ switch($accion){
     break;
     
     case 'Eliminar':
+
+      $sentenciaSQL= $conexion->prepare("SELECT imagen FROM libros WHERE id=:id;");
+      $sentenciaSQL->bindParam(':id', $txtID);
+      $sentenciaSQL->execute();
+      // Crea los nombres de las variables del objeto a medida que se acceden a ellas 
+      // y los almacena en la variable $libro
+      $libro = $sentenciaSQL->fetch(PDO::FETCH_LAZY);
+
+      // Si existe la imagen y no es 'imagen.jpg' la borramos
+      if(isset($libro['imagen']) && $libro['imagen'] != 'imagen.jpg') {
+        // Si existe la imagen
+        if(file_exists('../../img/'.$libro['imagen']))
+        // Borrar la imagen
+        unlink('../../img/'.$libro['imagen']);
+      }
+
       // Borrar desde la tabla libros cuando el id sea igual a :id
       $sentenciaSQL= $conexion->prepare("DELETE FROM libros WHERE id=:id;");
       $sentenciaSQL->bindParam(':id', $txtID);
