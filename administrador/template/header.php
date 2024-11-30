@@ -1,3 +1,18 @@
+<?php 
+// Inicio de la sesion
+session_start();
+  if(!isset($_SESSION['usuario'])) {
+    // Si hay una sesion iniciada se redirecciona a index.php (login)
+    header('Location:../index.php');
+  }else {
+    // Si no hay una sesion iniciada se crea la sesion y se almacena en la variable $nombreUsuario
+    if($_SESSION['usuario'] == 'ok') {
+      $nombreUsuario = $_SESSION['nombreUsuario'];
+    }
+  }
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 

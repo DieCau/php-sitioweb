@@ -1,6 +1,7 @@
 <?php include('../template/header.php'); ?>
 
 <?php
+
 $txtID = (isset($_POST['txtID'])) ?$_POST['txtID'] :'';
 
 $txtNombre = (isset($_POST['txtNombre'])) ?$_POST['txtNombre'] :'';
@@ -36,6 +37,8 @@ switch($accion){
     $sentenciaSQL->bindParam(':imagen', $nombreArchivo);
     // Ejecuta la sentencia SQL
     $sentenciaSQL->execute();
+    // Una vez ejecutada la sentencia SQL se redirecciona a productos.php
+    header('Location: productos.php');
     break;
 
   case 'Modificar':
@@ -72,6 +75,8 @@ switch($accion){
         $sentenciaSQL->bindParam(':imagen', $nombreArchivo);
         $sentenciaSQL->bindParam(':id', $txtID);
         $sentenciaSQL->execute(); 
+        // Una vez ejecutada la sentencia SQL se redirecciona a productos.php
+        header('Location: productos.php');
     } 
     
     break;
@@ -114,6 +119,8 @@ switch($accion){
       $sentenciaSQL= $conexion->prepare("DELETE FROM libros WHERE id=:id;");
       $sentenciaSQL->bindParam(':id', $txtID);
       $sentenciaSQL->execute();
+      // Una vez ejecutada la sentencia SQL se redirecciona a productos.php
+      header('Location: productos.php');
     break;
 }
 
@@ -138,12 +145,12 @@ $listaLibros= $sentenciaSQL->fetchAll(PDO::FETCH_ASSOC);
         <form method="POST" enctype="multipart/form-data">
           <div class="form-group">
             <label for="txtID">ID:</label>
-            <input type="text" class="form-control" value="<?php echo $txtID; ?>" name="txtID" id="txtID" placeholder="Ingrese ID">
+            <input type="text" required readonly class="form-control" value="<?php echo $txtID; ?>" name="txtID" id="txtID" placeholder="Ingrese ID">
           </div>
       
           <div class="form-group">
             <label for="txtNombre">Nombre:</label>
-            <input type="text" class="form-control" value="<?php echo $txtNombre; ?>" name="txtNombre" id="txtNombre" placeholder="Nombre del Libro">
+            <input type="text" required class="form-control" value="<?php echo $txtNombre; ?>" name="txtNombre" id="txtNombre" placeholder="Nombre del Libro">
           </div>
       
           <div class="form-group">
@@ -157,13 +164,16 @@ $listaLibros= $sentenciaSQL->fetchAll(PDO::FETCH_ASSOC);
             
             <?php } ?>
 
-            <input type="file" class="form-control" name="txtImagen" id="txtImagen" placeholder="Imagen...">
+            <input type="file" required class="form-control" name="txtImagen" id="txtImagen" placeholder="Imagen...">
           </div>
       
           <div class="btn-group" role="group" aria-label="">
-            <button type="submit" name="accion" value="Agregar" class="btn btn-success">Agregar</button>
-            <button type="submit" name="accion" value="Modificar" class="btn btn-warning">Modificar</button>
-            <button type="submit" name="accion" value="Cancelar" class="btn btn-info">Cancelar</button>
+            <button type="submit" name="accion" <?php echo ($accion == 'Seleccionar') ? 'disabled' : ''; ?> 
+              value="Agregar" class="btn btn-success">Agregar</button>
+            <button type="submit" name="accion" <?php echo ($accion != 'Seleccionar') ? 'disabled' : ''; ?>
+               value="Modificar" class="btn btn-warning">Modificar</button>
+            <button type="submit" name="accion" <?php echo ($accion != 'Seleccionar') ? 'disabled' : ''; ?> 
+              value="Cancelar" class="btn btn-info">Cancelar</button>
           </div>
 
         </form>
