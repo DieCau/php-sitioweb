@@ -13,8 +13,3 @@
 <?php include('template/footer.php'); ?>
 
 
-<!-- // No copiar -->
-<!-- <?php 
-            if($txtImagen != ''){ ?>
-              <img class="img-thumbnail" src="data:image/jpeg;base64,<?php echo base64_encode($libro['imagen']); ?>" width="50" height="50">
-            <?php } ?> */ -->
