@@ -4,7 +4,7 @@ session_start();
     if($_POST['usuario'] == 'admin' && $_POST['password'] == 'admin') {
       
       $_SESSION['usuario'] = 'ok';
-      $_SESSION['nombreUsuario'] = 'Administrador';
+      $_SESSION['nombreUsuario'] = 'Diegol!';
       
       header('Location: inicio.php');
     }else {
